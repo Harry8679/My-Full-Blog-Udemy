@@ -1,11 +1,19 @@
-import { useState } from "react";
-import API from "../api";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState(""); // Gestion des erreurs
   const navigate = useNavigate();
+
+  // ✅ Redirection si déjà connecté
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // 🔄 Redirige vers l'accueil si l'utilisateur est connecté
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,6 +63,7 @@ const Register = () => {
               placeholder="Nom" 
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
               onChange={handleChange} 
+              required
             />
           </div>
           <div>
@@ -65,6 +74,7 @@ const Register = () => {
               placeholder="Email" 
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
               onChange={handleChange} 
+              required
             />
           </div>
           <div>
@@ -75,6 +85,7 @@ const Register = () => {
               placeholder="Mot de passe" 
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
               onChange={handleChange} 
+              required
             />
           </div>
           <div>
@@ -85,6 +96,7 @@ const Register = () => {
               placeholder="Confirmer le mot de passe" 
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
               onChange={handleChange} 
+              required
             />
             {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>

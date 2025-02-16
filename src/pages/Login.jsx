@@ -1,10 +1,17 @@
-import { useState } from "react";
-import API from "../api";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // 🔄 Rediriger vers l'accueil si l'utilisateur est déjà connecté
+    }
+  }, [navigate]);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -12,35 +19,13 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     try {
       const { data } = await API.post("/auth/login", formData);
-      console.log("Réponse API :", data); // Vérifier la structure de la réponse
       localStorage.setItem("token", data.token);
-      
-      if (setUser) {
-        setUser(data); // Vérifie que setUser est bien défini
-      } else {
-        console.error("setUser est indéfini !");
-      }
-  
+      setUser(data);
       navigate("/");
     } catch (error) {
-      console.error("Erreur de connexion :", error.response?.data || error);
       alert("Connexion échouée");
     }
   };
-  
-  
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const { data } = await API.post("/auth/login", formData);
-  //     localStorage.setItem("token", data.token);
-  //     setUser(data);
-  //     navigate("/");
-  //   } catch (error) {
-  //     alert("Connexion échouée");
-  //   }
-  // };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
