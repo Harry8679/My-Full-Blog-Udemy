@@ -18,22 +18,27 @@ const Navbar = ({ user, setUser }) => {
     <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
       <Link to="/" className="text-lg font-bold">📝 Blog</Link>
       
-      <div>
+      <div className="flex items-center space-x-4">
         {user ? (
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-300">👤 {user.username}</span>
+          <>
+            <Link to="/create" className="px-4 py-2 bg-green-500 rounded hover:bg-green-600 transition">
+              ✏️ Créer un post
+            </Link>
+            <Link to="/profile" className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+              👤 {user.username}
+            </Link>
             <button 
               onClick={handleLogout} 
               className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition"
             >
               Déconnexion
             </button>
-          </div>
+          </>
         ) : (
-          <div className="flex space-x-4">
+          <>
             <Link to="/login" className="px-4">Connexion</Link>
             <Link to="/register" className="px-4">Inscription</Link>
-          </div>
+          </>
         )}
       </div>
     </nav>
