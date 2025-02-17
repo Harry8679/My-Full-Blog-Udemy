@@ -66,7 +66,8 @@ function App() {
         <main className="flex-grow p-6">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/post/:id" element={<PostDetail />} />
+            {/* <Route path="/post/:id" element={<PostDetail />} /> */}
+            <Route path="/post/:id" element={<PostDetail user={user} />} />
             <Route path="/login" element={user ? <Home /> : <Login setUser={setUser} />} />
             <Route path="/register" element={user ? <Home /> : <Register />} />
             <Route path="/profile" element={user ? <Profile user={user} /> : <Login setUser={setUser} />} />
