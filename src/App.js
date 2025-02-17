@@ -25,14 +25,19 @@ function App() {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
       });
-
-      if (!response.ok) return;
+  
+      if (!response.ok) {
+        console.error("Échec de la récupération du profil, statut :", response.status);
+        return;
+      }
+  
       const data = await response.json();
+      console.log("🔹 Données utilisateur :", data);
       if (data.user) setUser(data.user);
     } catch (error) {
       console.error("Erreur lors de la récupération du profil :", error);
     }
-  };
+  };  
 
   return (
     <Router>
