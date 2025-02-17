@@ -28,22 +28,25 @@ function App() {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
       });
-
+  
       if (!response.ok) {
+        if (response.status === 401) { // Si le token a expiré
+          console.warn("🔴 Token expiré, suppression du token...");
+          localStorage.removeItem("token");
+          setUser(null);
+          return;
+        }
         console.error("Échec de la récupération du profil, statut :", response.status);
-        setLoading(false);
         return;
       }
-
+  
       const data = await response.json();
       console.log("🔹 Données utilisateur :", data);
       if (data.user) setUser(data.user);
     } catch (error) {
       console.error("Erreur lors de la récupération du profil :", error);
-    } finally {
-      setLoading(false); // ✅ Stop le chargement après la requête
     }
-  };
+  };  
 
   // 👉 Attendre que `loading` soit `false` avant d'afficher l'UI
   if (loading) {
