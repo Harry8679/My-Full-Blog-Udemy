@@ -1,7 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("Utilisateur dans Navbar :", user);
+  }, [user]);
 
   const handleLogout = async () => {
     localStorage.removeItem("token");
