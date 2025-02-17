@@ -6,12 +6,11 @@ import Home from "./pages/Home";
 import PostDetail from "./pages/PostDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile"; // Ajout de la page profil
+import Profile from "./pages/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
 
-  // Vérifier le token au chargement
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -29,7 +28,10 @@ function App() {
         },
       });
 
-      if (!response.ok) throw new Error("Erreur lors de la récupération du profil");
+      if (!response.ok) {
+        console.error("Erreur lors de la récupération du profil :", await response.text());
+        return;
+      }
 
       const data = await response.json();
       console.log("Données utilisateur :", data);
@@ -47,8 +49,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/post/:id" element={<PostDetail />} />
-            <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={user ? <Home /> : <Login setUser={setUser} />} />
+            <Route path="/register" element={user ? <Home /> : <Register />} />
             <Route path="/profile" element={<Profile user={user} />} />
           </Routes>
         </main>
