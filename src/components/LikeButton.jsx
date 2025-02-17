@@ -5,24 +5,30 @@ const LikeButton = ({ postId, initialLikes, isLiked, token }) => {
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(isLiked);
 
-  const toggleLike = async () => {
+  const handleLike = async () => {
     try {
-      await API.post(`/posts/${postId}/like`, {}, { 
-        headers: { Authorization: `Bearer ${token}` } 
+      const response = await API.post(`/posts/${postId}/like`, {}, { 
+        headers: { Authorization: `Bearer ${token}` }
       });
+
+      setLikes(response.data.likes);
       setLiked(!liked);
-      setLikes(liked ? likes - 1 : likes + 1);
-    } catch (error) {
-      console.error("Erreur lors du like :", error);
+    } catch (err) {
+      console.error("❌ Erreur lors du like :", err);
+      alert("Impossible d'ajouter un like.");
     }
   };
 
   return (
-    <button onClick={toggleLike} className="mt-4">
-      {liked ? "❤️" : "🤍"} {likes}
+    <button 
+      onClick={handleLike} 
+      className={`px-4 py-2 rounded transition ${
+        liked ? "bg-red-500 hover:bg-red-600" : "bg-gray-300 hover:bg-gray-400"
+      }`}
+    >
+      {liked ? "❤️ J'aime" : "🤍 J'aime"} ({likes})
     </button>
   );
 };
-
 
 export default LikeButton;
