@@ -30,23 +30,29 @@ function App() {
       });
   
       if (!response.ok) {
-        if (response.status === 401) { // Si le token a expiré
-          console.warn("🔴 Token expiré, suppression du token...");
+        console.error("🔴 Erreur de récupération du profil, statut :", response.status);
+  
+        if (response.status === 401) { // 🔥 Si le token a expiré
+          console.warn("🚨 Token expiré, suppression...");
           localStorage.removeItem("token");
           setUser(null);
-          return;
         }
-        console.error("Échec de la récupération du profil, statut :", response.status);
+  
+        setLoading(false);
         return;
       }
   
       const data = await response.json();
       console.log("🔹 Données utilisateur :", data);
-      if (data.user) setUser(data.user);
+      if (data.user) {
+        setUser(data.user);
+      }
     } catch (error) {
-      console.error("Erreur lors de la récupération du profil :", error);
+      console.error("⚠️ Erreur lors de la récupération du profil :", error);
+    } finally {
+      setLoading(false); // ✅ Toujours arrêter le chargement même en cas d'erreur
     }
-  };  
+  };
 
   // 👉 Attendre que `loading` soit `false` avant d'afficher l'UI
   if (loading) {
