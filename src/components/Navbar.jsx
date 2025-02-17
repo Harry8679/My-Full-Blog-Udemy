@@ -3,11 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // Fonction pour la déconnexion
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Supprime le token
-    setUser(null); // Réinitialise l'utilisateur
-    navigate("/login"); // Redirige vers la page de connexion
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
   };
 
   return (
@@ -16,7 +15,6 @@ const Navbar = ({ user, setUser }) => {
       
       <div>
         {user ? (
-          // Si l'utilisateur est connecté
           <div className="flex items-center space-x-4">
             <span className="text-gray-300">👤 {user.username}</span>
             <button 
@@ -27,8 +25,7 @@ const Navbar = ({ user, setUser }) => {
             </button>
           </div>
         ) : (
-          // Si l'utilisateur n'est PAS connecté
-          <div>
+          <div className="flex space-x-4">
             <Link to="/login" className="px-4">Connexion</Link>
             <Link to="/register" className="px-4">Inscription</Link>
           </div>
