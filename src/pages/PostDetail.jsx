@@ -20,7 +20,8 @@ const PostDetail = ({ user }) => {
   return (
     <div className="max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold">{post.title}</h1>
-      <img src={post.image} alt={post.title} className="w-full rounded-lg my-4" />
+      {/* <img src={post.image} alt={post.title} className="w-full rounded-lg my-4" /> */}
+      <img src={post.image} alt={post.title} className="w-full max-h-96 rounded-lg my-4 object-cover" />
       <p>{post.content}</p>
 
       {user && <LikeButton postId={post._id} initialLikes={post.likes.length} isLiked={post.likes.includes(user.id)} token={user.token} />}
