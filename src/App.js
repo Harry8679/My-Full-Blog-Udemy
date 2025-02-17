@@ -7,6 +7,7 @@ import PostDetail from "./pages/PostDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -22,19 +23,11 @@ function App() {
     try {
       const response = await fetch("http://localhost:4400/api/auth/profile", {
         method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
+        headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
       });
 
-      if (!response.ok) {
-        console.error("Erreur lors de la récupération du profil :", await response.text());
-        return;
-      }
-
+      if (!response.ok) return;
       const data = await response.json();
-      console.log("Données utilisateur :", data);
       if (data.user) setUser(data.user);
     } catch (error) {
       console.error("Erreur lors de la récupération du profil :", error);
@@ -52,6 +45,7 @@ function App() {
             <Route path="/login" element={user ? <Home /> : <Login setUser={setUser} />} />
             <Route path="/register" element={user ? <Home /> : <Register />} />
             <Route path="/profile" element={<Profile user={user} />} />
+            <Route path="/create" element={user ? <CreatePost token={localStorage.getItem("token")} /> : <Login setUser={setUser} />} />
           </Routes>
         </main>
         <Footer />
