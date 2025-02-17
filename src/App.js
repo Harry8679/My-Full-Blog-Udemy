@@ -11,11 +11,14 @@ import CreatePost from "./pages/CreatePost";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ État de chargement
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       fetchUserProfile(token);
+    } else {
+      setLoading(false); // Stop le chargement si pas de token
     }
   }, []);
 
@@ -25,19 +28,27 @@ function App() {
         method: "GET",
         headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
       });
-  
+
       if (!response.ok) {
         console.error("Échec de la récupération du profil, statut :", response.status);
+        setLoading(false);
         return;
       }
-  
+
       const data = await response.json();
       console.log("🔹 Données utilisateur :", data);
       if (data.user) setUser(data.user);
     } catch (error) {
       console.error("Erreur lors de la récupération du profil :", error);
+    } finally {
+      setLoading(false); // ✅ Stop le chargement après la requête
     }
-  };  
+  };
+
+  // 👉 Attendre que `loading` soit `false` avant d'afficher l'UI
+  if (loading) {
+    return <div className="text-center mt-10">Chargement...</div>;
+  }
 
   return (
     <Router>
@@ -49,7 +60,7 @@ function App() {
             <Route path="/post/:id" element={<PostDetail />} />
             <Route path="/login" element={user ? <Home /> : <Login setUser={setUser} />} />
             <Route path="/register" element={user ? <Home /> : <Register />} />
-            <Route path="/profile" element={<Profile user={user} />} />
+            <Route path="/profile" element={user ? <Profile user={user} /> : <Login setUser={setUser} />} />
             <Route path="/create" element={user ? <CreatePost token={localStorage.getItem("token")} /> : <Login setUser={setUser} />} />
           </Routes>
         </main>
