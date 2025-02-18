@@ -11,18 +11,18 @@ const CommentForm = ({ postId, token }) => {
       setError("Le commentaire ne peut pas être vide !");
       return;
     }
-  
+
     if (!token) {
       alert("Vous devez être connecté pour commenter.");
       return;
     }
-  
+
     try {
       await API.post(`/comments/${postId}`, 
         { content }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       alert("Commentaire ajouté avec succès !");
       setContent("");
       setError(null);
@@ -30,28 +30,7 @@ const CommentForm = ({ postId, token }) => {
       console.error("❌ Erreur lors de l'ajout du commentaire :", err);
       setError("Impossible d'ajouter le commentaire.");
     }
-  };  
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (!content.trim()) {
-  //     setError("Le commentaire ne peut pas être vide !");
-  //     return;
-  //   }
-
-  //   try {
-  //     await API.post(`/comments/${postId}`, { content }, { 
-  //       headers: { Authorization: `Bearer ${token}` } 
-  //     });
-
-  //     alert("Commentaire ajouté avec succès !");
-  //     setContent("");
-  //     setError(null);
-  //   } catch (err) {
-  //     console.error("❌ Erreur lors de l'ajout du commentaire :", err);
-  //     setError("Impossible d'ajouter le commentaire.");
-  //   }
-  // };
+  };
 
   return (
     <form onSubmit={handleSubmit} className="mt-4">
