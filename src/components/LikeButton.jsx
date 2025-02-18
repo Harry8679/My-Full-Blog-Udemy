@@ -10,33 +10,19 @@ const LikeButton = ({ postId, initialLikes, isLiked, token }) => {
       alert("Vous devez être connecté pour aimer un post.");
       return;
     }
-  
+
     try {
       const response = await API.post(`/posts/${postId}/like`, {}, { 
         headers: { Authorization: `Bearer ${token}` }
       });
-  
+
       setLikes(response.data.likes);
       setLiked(!liked);
     } catch (err) {
       console.error("❌ Erreur lors du like :", err);
       alert("Impossible d'ajouter un like.");
     }
-  };  
-
-  // const handleLike = async () => {
-  //   try {
-  //     const response = await API.post(`/posts/${postId}/like`, {}, { 
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     });
-
-  //     setLikes(response.data.likes);
-  //     setLiked(!liked);
-  //   } catch (err) {
-  //     console.error("❌ Erreur lors du like :", err);
-  //     alert("Impossible d'ajouter un like.");
-  //   }
-  // };
+  };
 
   return (
     <button 
