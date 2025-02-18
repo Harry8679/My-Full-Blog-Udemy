@@ -1,18 +1,4 @@
-import { useEffect, useState } from "react";
-import API from "../api";
-
-const CommentList = ({ postId }) => {
-  const [comments, setComments] = useState([]);
-
-  useEffect(() => {
-    API.get(`/comments/${postId}`)
-      .then((res) => {
-        console.log("Commentaires récupérés :", res.data);
-        setComments(res.data);
-      })
-      .catch((err) => console.error("Erreur lors de la récupération des commentaires :", err));
-  }, [postId]);
-
+const CommentList = ({ comments }) => {
   return (
     <div className="mt-4">
       {comments.length > 0 ? (
