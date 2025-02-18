@@ -1,12 +1,13 @@
 import { useState } from "react";
 import API from "../api";
 
-const CommentForm = ({ postId, token }) => {
+const CommentForm = ({ postId, token, setComments }) => {
   const [content, setContent] = useState("");
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!content.trim()) {
       setError("Le commentaire ne peut pas être vide !");
       return;
@@ -18,12 +19,16 @@ const CommentForm = ({ postId, token }) => {
     }
 
     try {
-      await API.post(`/comments/${postId}`, 
+      const response = await API.post(`/comments/${postId}`, 
         { content }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert("Commentaire ajouté avec succès !");
+      const newComment = response.data;
+
+      // 🔥 Met à jour les commentaires sans rafraîchir
+      setComments(prevComments => [...prevComments, newComment]);
+
       setContent("");
       setError(null);
     } catch (err) {
