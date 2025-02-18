@@ -8,22 +8,26 @@ import CommentList from "../components/CommentList";
 const PostDetail = ({ user }) => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]); // 🔥 État des commentaires
 
   useEffect(() => {
     axios.get(`http://localhost:4400/api/posts/${id}`)
       .then((res) => {
-        console.log("📌 Post récupéré :", res.data); // Vérifier que les données sont bien reçues
+        console.log("📌 Post récupéré :", res.data);
         setPost(res.data);
       })
       .catch((err) => console.error("❌ Erreur de récupération du post :", err));
+
+    // 🔥 Récupération des commentaires
+    axios.get(`http://localhost:4400/api/comments/${id}`)
+      .then((res) => {
+        console.log("📌 Commentaires récupérés :", res.data);
+        setComments(res.data);
+      })
+      .catch((err) => console.error("❌ Erreur de récupération des commentaires :", err));
   }, [id]);
 
   if (!post) return <p>Chargement...</p>;
-
-  // Vérification des valeurs
-  console.log("👤 Utilisateur :", user);
-  console.log("👍 Likes :", post.likes);
-  console.log("🆔 ID du Post :", post._id);
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -31,7 +35,7 @@ const PostDetail = ({ user }) => {
       <img src={post.image} alt={post.title} className="w-full max-h-96 rounded-lg my-4 object-cover" />
       <p>{post.content}</p>
 
-      {/* Affichage du bouton Like uniquement si l'utilisateur est connecté et les likes sont disponibles */}
+      {/* Bouton Like */}
       {user && Array.isArray(post.likes) && (
         <LikeButton 
           postId={post._id} 
@@ -43,12 +47,12 @@ const PostDetail = ({ user }) => {
 
       <h3 className="text-2xl font-bold mt-6">Commentaires</h3>
 
-      {/* Vérifier que post._id est défini avant d'afficher les commentaires */}
-      {post._id ? <CommentList postId={post._id} /> : <p>Aucun commentaire disponible</p>}
+      {/* Liste des commentaires */}
+      <CommentList comments={comments} />
 
-      {/* Vérification pour afficher le formulaire de commentaire uniquement si l'utilisateur est connecté */}
+      {/* Formulaire de commentaire */}
       {user && post._id && (
-        <CommentForm postId={post._id} token={localStorage.getItem("token")} />
+        <CommentForm postId={post._id} token={localStorage.getItem("token")} setComments={setComments} />
       )}
     </div>
   );
